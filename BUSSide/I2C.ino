@@ -89,6 +89,8 @@ write_byte_I2C_eeprom(uint8_t slaveAddress, uint32_t skipsize, int addressLength
       }
       delay(10);
     }
+
+    return 0;
 }
 
 struct bs_frame_s*

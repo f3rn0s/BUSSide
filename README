@@ -24,3 +24,10 @@ If you wan't to flash the BUSSide using a different firmware image, then
 try:
 
 # esptool --port /dev/ttyUSB0 write_flash 0x00000 BUSSide/FirmwareImages/xx.bin
+
+==
+
+If you wan't to compile the firmware:
+
+# arduino-cli core install esp8266:esp8266 # You need to add the esp8266 repo to your arduino config.
+# arduino-cli upload -p /dev/ttyUSB0 -b 'esp8266:esp8266:nodemcuv2' BUSSide

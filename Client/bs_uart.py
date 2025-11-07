@@ -7,6 +7,7 @@ import time
 import sys
 import struct
 
+
 def uart_data_discover():
     print("+++ Sending UART data discovery command")
     request_args = []
@@ -18,7 +19,7 @@ def uart_data_discover():
 
     ngpio = 9
     for i in range(ngpio):
-        print("+++ SIGNAL CHANGES: D%d --> %d" % ((i+1), bs_reply_args[i]))
+        print("+++ SIGNAL CHANGES: D%d --> %d" % ((i + 1), bs_reply_args[i]))
     print("+++ SUCCESS")
     return rv
 
@@ -33,12 +34,13 @@ def uart_tx(rxpin, baudrate):
     (bs_reply_length, bs_reply_args) = rv
 
     txpin = bs_reply_args[0]
-    if txpin != 0xffffffff:
+    if txpin != 0xFFFFFFFF:
         print("+++ FOUND UART TX on GPIO %d" % (txpin + 1))
     else:
         print("+++ NOT FOUND. Note that GPIO 1 can't be used here.")
     print("+++ SUCCESS")
     return rv
+
 
 def uart_rx():
     print("+++ Sending UART discovery rx command")
@@ -51,14 +53,14 @@ def uart_rx():
 
     ngpio = 9
     for i in range(ngpio):
-        changes = bs_reply_args[5*i + 0]
-        print("+++ GPIO %d has %d signal changes" % (i+1, changes))
+        changes = bs_reply_args[5 * i + 0]
+        print("+++ GPIO %d has %d signal changes" % (i + 1, changes))
         if changes > 0:
-            databits = bs_reply_args[5*i + 1]
+            databits = bs_reply_args[5 * i + 1]
             if databits > 0:
-                stopbits = bs_reply_args[5*i + 2]
-                parity = bs_reply_args[5*i + 3]
-                baudrate = bs_reply_args[5*i + 4]
+                stopbits = bs_reply_args[5 * i + 2]
+                parity = bs_reply_args[5 * i + 3]
+                baudrate = bs_reply_args[5 * i + 4]
                 print("+++ UART FOUND")
                 print("+++ DATABITS: %d" % (databits))
                 print("+++ STOPBITS: %d" % (stopbits))
@@ -72,8 +74,9 @@ def uart_rx():
     print("+++ SUCCESS")
     return (bs_reply_length, bs_reply_args)
 
+
 def uart_passthrough(gpiorx, gpiotx, baudrate):
-    request_args = [gpiorx-1, gpiotx-1, baudrate]
+    request_args = [gpiorx - 1, gpiotx - 1, baudrate]
     bs.NewTimeout(30)
     rv = bs.requestreply(19, request_args)
     if rv is None:
@@ -94,6 +97,7 @@ def uart_passthrough(gpiorx, gpiotx, baudrate):
     bs.keys_cleanup()
     return None
 
+
 def uart_passthrough_auto():
     rv = uart_rx()
     if rv is None:
@@ -103,13 +107,13 @@ def uart_passthrough_auto():
     uartcount = 0
     ngpio = 9
     for i in range(ngpio):
-        changes = bs_reply_args[5*i + 0]
+        changes = bs_reply_args[5 * i + 0]
         if changes > 0:
-            databits = bs_reply_args[5*i + 1]
+            databits = bs_reply_args[5 * i + 1]
             if databits > 0:
-                stopbits = bs_reply_args[5*i + 2]
-                parity = bs_reply_args[5*i + 3]
-                baudrate = bs_reply_args[5*i + 4]
+                stopbits = bs_reply_args[5 * i + 2]
+                parity = bs_reply_args[5 * i + 3]
+                baudrate = bs_reply_args[5 * i + 4]
                 rxpin = i + 1
                 uartcount = uartcount + 1
     if uartcount == 0:
@@ -126,16 +130,17 @@ def uart_passthrough_auto():
         if rv is not None:
             (bs_reply_length, bs_reply_args) = rv
             txpin = bs_reply_args[0]
-            if txpin != 0xffffffff:
+            if txpin != 0xFFFFFFFF:
                 txpin = txpin + 1
                 break
         print("+++ Didn't detect TX. Sleeping for 10 seconds and trying again.")
         time.sleep(10)
-    if txpin == 0xffffffff:
+    if txpin == 0xFFFFFFFF:
         print("+++ FAILED")
         return None
     uart_passthrough(rxpin, txpin, baudrate)
     return 0
+
 
 def doCommand(command):
     if command == "discover rx":
@@ -161,4 +166,3 @@ def doCommand(command):
         return 0
     else:
         return None
-

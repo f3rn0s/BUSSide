@@ -1,4 +1,4 @@
-#include <Boards.h>
+//#include <boards.h>
 #include <pins_arduino.h>
 #include "BUSSide.h"
 
@@ -119,17 +119,17 @@ static void Sync()
     if (rv != 1)
       continue;
       if (ch == 0xfe) {
- //     flashLED(100,200);
+        flashLED(100,200);
 got1:
-      ch = 0;
-      rv = Serial.readBytes(&ch, 1);
-      if (rv != 1)
-        continue;
-      if (ch == 0xca)
-        return;
-      else if (ch == 0xfe)
-        goto got1;
-    }
+        ch = 0;
+        rv = Serial.readBytes(&ch, 1);
+        if (rv != 1)
+          continue;
+        if (ch == 0xca)
+          return;
+        else if (ch == 0xfe)
+          goto got1;
+      }
   }
 }
 

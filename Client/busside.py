@@ -17,6 +17,7 @@ if len(sys.argv) != 2:
 
 device = sys.argv[1]
 
+
 def printHelp():
     print("+++ The BUSSide accepts the following commands")
     print("+++")
@@ -34,8 +35,12 @@ def printHelp():
     print("+++ > spi flash write <size> <infile>")
     print("+++ > i2c discover pinout")
     print("+++ > i2c discover slaves <sdaPin> <sclPin>")
-    print("+++ > i2c flash dump <sdaPin> <sclPin> <slaveAddress> <addressLength> <size> <outfile>")
-    print("+++ > i2c flash write <sdaPin> <sclPin> <slaveAddress> <addressLength> <size> <infile>")
+    print(
+        "+++ > i2c flash dump <sdaPin> <sclPin> <slaveAddress> <addressLength> <size> <outfile>"
+    )
+    print(
+        "+++ > i2c flash write <sdaPin> <sclPin> <slaveAddress> <addressLength> <size> <infile>"
+    )
     print("+++ > jtag discover pinout")
     print("+++ > uart discover data")
     print("+++ > uart passthrough auto")
@@ -45,6 +50,7 @@ def printHelp():
     print("+++ > help")
     print("+++ > quit")
     print("+++")
+
 
 def doCommand(command):
     if command.find("spi ") == 0:
@@ -60,11 +66,12 @@ def doCommand(command):
     else:
         return None
 
+
 try:
     with open("/tmp/BUSSide.seq", "rb") as f:
         d = f.read(4)
         if len(d) == 4:
-            seq, = struct.unpack('<I', d)
+            (seq,) = struct.unpack("<I", d)
             bs.set_sequence_number(seq)
 except:
     pass
@@ -85,7 +92,7 @@ print("+++")
 
 while True:
     try:
-        command = raw_input("> ")
+        command = input("> ")
     except:
         break
     rv = doCommand(command)
